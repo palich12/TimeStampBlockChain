@@ -1,5 +1,14 @@
 import * as React from 'react';
-import {Button, Col, Form, FormGroup, Input, Label } from 'reactstrap';
+import {
+  Button, 
+  Col, 
+  Form, 
+  FormGroup, 
+  Input, 
+  InputGroup, 
+  InputGroupAddon, 
+  // Label 
+} from 'reactstrap';
 // import getHash from './Helpers';
 
 class Login extends React.Component<{}, { password: string, login:string }> {
@@ -28,28 +37,37 @@ class Login extends React.Component<{}, { password: string, login:string }> {
   public render() {
     return (
       <div className="container">
-        <Col sm="12" md={{ size: 2, offset: 5 }}>
+        <Col sm="12" md={{ size: 4, offset: 4 }}>
           <Form className="form-horizontal" 
                 onSubmit={this.handleSubmit}>
             <FormGroup>
-              <Label for="login">Login</Label>
-              <Input  type="text" 
-                      name="login" 
-                      id="login" 
-                      placeholder="Login" 
-                      value={this.state.login}
-                      onChange={this.handleLoginChange} />
+              <InputGroup>
+                <InputGroupAddon addonType="prepend">@</InputGroupAddon>
+                <Input  type="text" 
+                        name="login" 
+                        id="login" 
+                        placeholder="Login" 
+                        value={this.state.login}
+                        onChange={this.handleLoginChange} />
+              </InputGroup>
             </FormGroup>
             <FormGroup>
-              <Label for="password">Password</Label>
-              <Input  type="password" 
-                      name="password" 
-                      id="password" 
-                      placeholder="Password" 
-                      value={this.state.password}
-                      onChange={this.handlePasswordChange} />
+              <InputGroup>
+                <InputGroupAddon addonType="prepend">&#9919;</InputGroupAddon>
+                <Input  type="password" 
+                        name="password" 
+                        id="password" 
+                        placeholder="Password" 
+                        value={this.state.password}
+                        onChange={this.handlePasswordChange} />
+              </InputGroup>
             </FormGroup>
-            <Button type="submit">Sign in</Button>
+            <Button color="primary" 
+                    size="lg" 
+                    block={true} 
+                    type="submit">
+                    Sign in
+            </Button>
           </Form> 
         </Col>
       </div>
