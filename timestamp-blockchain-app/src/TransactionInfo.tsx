@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {Col} from 'reactstrap';
 
-class FileList extends React.Component {
+class TransactionInfo extends React.Component<{setAlert: (text:string) =>void }, {}> {
   public render() {
     return (
       <div className="container">
@@ -13,4 +13,4 @@ class FileList extends React.Component {
   }
 }
 
-export default FileList;
+export default TransactionInfo;

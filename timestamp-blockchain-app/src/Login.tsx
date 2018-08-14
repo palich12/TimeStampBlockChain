@@ -9,14 +9,16 @@ import {
   InputGroupAddon, 
   // Label 
 } from 'reactstrap';
-// import getHash from './Helpers';
+import {Core} from './Core';
 
-class Login extends React.Component<{}, { password: string, login:string }> {
+class Login extends React.Component<{setAlert: (text:string) =>void }, { 
+  password: string, 
+  login:string }> {
 
   constructor(props:any, state:any){
     
     super(props, state);
-    this.state = {login: "", password: ""}
+    this.state = {login: "", password: ""};
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleLoginChange = this.handleLoginChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
@@ -24,13 +26,20 @@ class Login extends React.Component<{}, { password: string, login:string }> {
 
   public handleSubmit(event:React.FormEvent) : void {
     event.preventDefault();
-    console.log(event);   
+    if(Core.login(this.state.login, this.state.password) != null){
+      this.props.setAlert("");
+    }
+    else{
+      this.props.setAlert("Wrong login or password!");
+    }
   }
 
   public handleLoginChange(event:any) {
+    this.props.setAlert("");
     this.setState({login: event.target.value});
   }
   public handlePasswordChange(event:any) {
+    this.props.setAlert("");
     this.setState({password: event.target.value});
   }
 
