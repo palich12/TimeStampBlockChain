@@ -9,16 +9,21 @@ class CheckServer extends React.Component<{setAlert: (text:string) =>void }, { s
         super(props, state);
         this.state = {seerverResponse: ""};
         // this.handlePasswordChange = this.handlePasswordChange.bind(this);
+        Core.checkServer().then(res =>{ 
+            this.setState({seerverResponse: JSON.stringify(res, null, 2)});
+        });
       }
 
     public render() {
 
-        Core.checkServer().then(res => this.setState({seerverResponse: res}));
+        
 
         return (
         <div className="container">
             <Col sm="12" md={{ size: 10, offset: 1 }}>
-                {this.state.seerverResponse} 
+                <pre>
+                    {this.state.seerverResponse}
+                </pre>
             </Col>
         </div>
         );

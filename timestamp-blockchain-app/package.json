@@ -21,6 +21,7 @@
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject"
   },
+  "proxy": "http://167.99.130.47:8064", 
   "devDependencies": {
     "@types/crypto-js": "^3.1.43",
     "@types/jest": "^23.3.1",

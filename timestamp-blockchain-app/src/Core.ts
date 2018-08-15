@@ -25,7 +25,8 @@ const usersData : UserInfo[] = [
 const PROTOCOL_VERSION = 0
 const SERVICE_ID = 130
 const TX_ID = 0
-const HOST = "http://167.99.130.47:8064"
+// const HOST = "http://167.99.130.47:8064"
+const HOST = ""
 
 // const TableKey = Exonum.newType({
 //   fields: [
