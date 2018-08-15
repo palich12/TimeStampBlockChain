@@ -144,12 +144,11 @@ export class Core {
         formData.append("file", file);
         formData.append("tx", JSON.stringify(tx));
         axios.post( HOST + '/api/services/timestamping/v1/files', 
-                    // formData, 
-                    tx,
+                    formData, 
                     { 
-                        // headers: {
-                        //     'Content-Type': 'multipart/form-data',                          
-                        // }
+                        headers: {
+                            'Content-Type': 'multipart/form-data',                          
+                        }
                     })
         .then( response => {
             console.log(response);
@@ -161,5 +160,11 @@ export class Core {
         const hash = await Core.getFileHash(file);
         return axios.get<string>( HOST + '/api/services/timestamping/v1/timestamps/value/' + hash)
         .then( response => response.data );
+    }
+
+    public static async checkServer() : Promise<string> {
+        return (await axios.get<string>( 
+            HOST + '/api/services/configuration/v1/configs/actual'
+        )).data;
     }
 }

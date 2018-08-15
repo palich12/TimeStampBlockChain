@@ -14,6 +14,7 @@ import {
   NavLink,
   UncontrolledDropdown } from 'reactstrap';
 import './App.css';
+import CheckServer from './CheckServer';
 import {Core} from './Core';
 import Login from './Login';
 import ShowPublicKey from './ShowPublicKey';
@@ -64,11 +65,13 @@ class App extends React.Component<{}, {
     const login = () => (<Login setAlert={this.setAlert}/>);
     const uploadfile = () => (<UploadFile setAlert={this.setAlert}/>);
     const showpublickey = () => (<ShowPublicKey setAlert={this.setAlert}/>);
+    const checkserver = () => (<CheckServer setAlert={this.setAlert}/>);
     const mainComponent = userInfo != null ? 
     (
       <Switch>
         <Route exact={true} path='/' render={uploadfile} />
         <Route path='/publickey' render={showpublickey}/>
+        <Route path='/checkserver' render={checkserver}/>
       </Switch>
     ):(
       <Switch>
@@ -86,7 +89,10 @@ class App extends React.Component<{}, {
             <NavLink href="/">Upload file</NavLink>
           </DropdownItem>
           <DropdownItem>
-          <NavLink href="/publickey">Show public key</NavLink>
+            <NavLink href="/publickey">Show public key</NavLink>
+          </DropdownItem>
+          <DropdownItem>
+            <NavLink href="/checkserver">Check server</NavLink>
           </DropdownItem>
           <DropdownItem divider={true} />
           <DropdownItem onClick={this.logout}>
