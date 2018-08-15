@@ -22,8 +22,8 @@ class CheckFile extends React.Component<{setAlert: (text:string) =>void }, {}> {
 
   public async handleSubmit(event:React.FormEvent) {
     event.preventDefault();
-    const response = await Core.checkFile(this.curientFile);
-    this.props.setAlert(response);
+    const hash = await Core.getFileHash(this.curientFile);
+    Core.redirect("/file/"+hash);
   }
 
   public handleFileChange(event:any) {

@@ -26,7 +26,11 @@ const PROTOCOL_VERSION = 0
 const SERVICE_ID = 130
 const TX_ID = 0
 
+
 export class Core {
+
+    public static HOST = "http://167.99.130.47:8064"; 
+
     public static login( login: string, pass: string ) : UserInfo | null {
 
         const kp = Exonum.keyPair();
@@ -87,9 +91,9 @@ export class Core {
         const TxFile = Exonum.newMessage({
             
             fields: [
-                { name: 'file_hash', type: Exonum.Hash },
+                { name: 'pub_key', type: Exonum.PublicKey },
                 { name: 'metadata', type: Exonum.String },
-                { name: 'pub_key', type: Exonum.PublicKey }
+                { name: 'file_hash', type: Exonum.Hash }
             ],
             message_id: TX_ID,
             protocol_version: PROTOCOL_VERSION,
@@ -98,9 +102,10 @@ export class Core {
   
         // Transaction data
         const data = {
-            file_hash: hash,
+            pub_key: user.publicKey,
+            // tslint:disable-next-line:object-literal-sort-keys
             'metadata': metadata,
-            pub_key: user.publicKey
+            file_hash: hash
         }
 
         // Sign transaction
@@ -115,9 +120,7 @@ export class Core {
         };
         const formData = new FormData();
         formData.append("file", file);
-
-        const txblob = new Blob([JSON.stringify(tx)], {type : "application/json"});
-        formData.append("tx", txblob);
+        formData.append("tx", JSON.stringify(tx));
         axios.post( '/api/services/timestamping/v1/files', 
                     formData, 
                     { 
@@ -126,20 +129,33 @@ export class Core {
                         }
                     })
         .then( response => {
+            console.log("File uploaded!");
             console.log(response);
-            history.pushState({},"","/checkfile/"+hash); 
+            let userFiles = window.localStorage.getItem("UserFiles");
+            if(userFiles == null){
+                userFiles = JSON.stringify([hash]);
+            }
+            else{
+                userFiles = JSON.stringify( JSON.parse(userFiles).push(hash) );
+            }
+            window.localStorage.setItem("UserFiles", userFiles);
+
+            this.redirect("/file/"+hash);
         });
     }
 
-    public static async checkFile(file:File): Promise<string>{
-        const hash = await Core.getFileHash(file);
-        return axios.get<string>( '/api/services/timestamping/v1/timestamps/value/' + hash)
-        .then( response => response.data );
+    public static async checkFile(hash:string): Promise<string>{
+        return ( await axios.get<string>( '/api/services/timestamping/v1/timestamps/value/' + hash)).data;
     }
 
     public static async checkServer() : Promise<string> {
         return (await axios.get<string>( 
             '/api/services/configuration/v1/configs/actual'
         )).data;
+    }
+
+    public static redirect(path:string){
+        history.pushState({},"",path); 
+        window.location.reload();
     }
 }

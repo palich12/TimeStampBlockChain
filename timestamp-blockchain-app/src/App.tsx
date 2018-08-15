@@ -22,6 +22,7 @@ import ShowPublicKey from './ShowPublicKey';
 import UploadFile from './UploadFile';
 
 import * as browserHistory from 'history';
+import FileInfo from './FileInfo';
 export const history = browserHistory.createBrowserHistory();
 
 class App extends React.Component<{}, { 
@@ -35,12 +36,6 @@ class App extends React.Component<{}, {
     this.toggle = this.toggle.bind(this);
     this.setAlert = this.setAlert.bind(this);
     this.logout = this.logout.bind(this);
-
-    this.redirect = this.redirect.bind(this);
-    this.checkfileRedirect = this.checkfileRedirect.bind(this);
-    this.checkserverRedirect = this.checkserverRedirect.bind(this);
-    this.publickeyRedirect = this.publickeyRedirect.bind(this);
-    this.uploadfileRedirect = this.publickeyRedirect.bind(this);
 
     this.state = {
       alert: "",
@@ -63,28 +58,6 @@ class App extends React.Component<{}, {
     this.setAlert("");
   }
 
-  public redirect(path:string, event:React.MouseEvent){
-    // event.preventDefault();
-    history.push(path);
-    this.setState({"path": path});
-  }
-
-  public publickeyRedirect(event:React.MouseEvent){
-    this.redirect("/publickey", event);
-  }
-
-  public checkserverRedirect(event:React.MouseEvent){
-    this.redirect("/checkserver", event);
-  }
-
-  public checkfileRedirect(event:React.MouseEvent){
-    this.redirect("/checkfile", event);
-  }
-
-  public uploadfileRedirect(event:React.MouseEvent){
-    this.redirect("/", event);
-  }
-
   public render() {
 
     const alert = this.state.alert.length > 0 ?
@@ -102,13 +75,15 @@ class App extends React.Component<{}, {
     const showpublickey = () => (<ShowPublicKey setAlert={this.setAlert}/>);
     const checkserver = () => (<CheckServer setAlert={this.setAlert}/>);
     const checkfile = () => (<CheckFile setAlert={this.setAlert}/>); 
+    const fileinfo = (props:any) => (<FileInfo setAlert={this.setAlert} hash={props.match.params.hash} />);
     const mainComponent = userInfo != null ? 
     (
       <Switch>
-        <Route exact={true} path='/' render={uploadfile} />
-        <Route path='/publickey' render={showpublickey}/>
-        <Route path='/checkserver' render={checkserver}/>
-        <Route path='/checkfile' render={checkfile}/>
+        <Route exact={true} path='/' component={uploadfile} />
+        <Route path='/publickey' component={showpublickey}/>
+        <Route path='/checkserver' component={checkserver}/>
+        <Route path='/checkfile' component={checkfile}/>
+        <Route path="/file/:hash" component={fileinfo}/>
       </Switch>
     ):(
       <Switch>
@@ -122,16 +97,16 @@ class App extends React.Component<{}, {
         </DropdownToggle>
         <DropdownMenu right={true}>
           <DropdownItem>
-            <NavLink href="/" onClick={this.uploadfileRedirect}>Upload file</NavLink>
+            <NavLink href="/">Upload file</NavLink>
           </DropdownItem>
           <DropdownItem>
-            <NavLink href="/publickey" onClick={this.publickeyRedirect} >Show public key</NavLink>
+            <NavLink href="/publickey" >Show public key</NavLink>
           </DropdownItem>
           <DropdownItem>
-            <NavLink href="/checkserver" onClick={this.checkserverRedirect}>Check server</NavLink>
+            <NavLink href="/checkserver">Check server</NavLink>
           </DropdownItem>
           <DropdownItem>
-            <NavLink href="/checkfile"  onClick={this.checkfileRedirect}>Get file info</NavLink>
+            <NavLink href="/checkfile">Get file info</NavLink>
           </DropdownItem>
           <DropdownItem divider={true} />
           <DropdownItem onClick={this.logout}>
