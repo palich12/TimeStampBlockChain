@@ -14,26 +14,38 @@ import {
   NavLink,
   UncontrolledDropdown } from 'reactstrap';
 import './App.css';
+import CheckFile from './CheckFile';
 import CheckServer from './CheckServer';
 import {Core} from './Core';
 import Login from './Login';
 import ShowPublicKey from './ShowPublicKey';
 import UploadFile from './UploadFile';
 
+import * as browserHistory from 'history';
+export const history = browserHistory.createBrowserHistory();
+
 class App extends React.Component<{}, { 
   isOpen: boolean, 
-  alert: string }> {
+  alert: string,
+  path: string}> {
 
-  constructor(props: Readonly<{}>) {
-    super(props);
+  constructor(props :any, state:any) {
+    super(props, state);
 
     this.toggle = this.toggle.bind(this);
     this.setAlert = this.setAlert.bind(this);
     this.logout = this.logout.bind(this);
 
+    this.redirect = this.redirect.bind(this);
+    this.checkfileRedirect = this.checkfileRedirect.bind(this);
+    this.checkserverRedirect = this.checkserverRedirect.bind(this);
+    this.publickeyRedirect = this.publickeyRedirect.bind(this);
+    this.uploadfileRedirect = this.publickeyRedirect.bind(this);
+
     this.state = {
       alert: "",
       isOpen: false,
+      path: "/"
     };
   }
   public toggle() {
@@ -51,7 +63,30 @@ class App extends React.Component<{}, {
     this.setAlert("");
   }
 
+  public redirect(path:string, event:React.MouseEvent){
+    // event.preventDefault();
+    history.push(path);
+    this.setState({"path": path});
+  }
+
+  public publickeyRedirect(event:React.MouseEvent){
+    this.redirect("/publickey", event);
+  }
+
+  public checkserverRedirect(event:React.MouseEvent){
+    this.redirect("/checkserver", event);
+  }
+
+  public checkfileRedirect(event:React.MouseEvent){
+    this.redirect("/checkfile", event);
+  }
+
+  public uploadfileRedirect(event:React.MouseEvent){
+    this.redirect("/", event);
+  }
+
   public render() {
+
     const alert = this.state.alert.length > 0 ?
     <div className="container">
       <Alert color="danger">
@@ -66,17 +101,18 @@ class App extends React.Component<{}, {
     const uploadfile = () => (<UploadFile setAlert={this.setAlert}/>);
     const showpublickey = () => (<ShowPublicKey setAlert={this.setAlert}/>);
     const checkserver = () => (<CheckServer setAlert={this.setAlert}/>);
+    const checkfile = () => (<CheckFile setAlert={this.setAlert}/>); 
     const mainComponent = userInfo != null ? 
     (
       <Switch>
         <Route exact={true} path='/' render={uploadfile} />
         <Route path='/publickey' render={showpublickey}/>
         <Route path='/checkserver' render={checkserver}/>
+        <Route path='/checkfile' render={checkfile}/>
       </Switch>
     ):(
       <Switch>
         <Route exact={true} path='/' render={login}/>
-        {/* <Route path='/checkfile' component={ShowPublicKey}/> */}
       </Switch>);
     
     const options =  userInfo != null ? (
@@ -86,13 +122,16 @@ class App extends React.Component<{}, {
         </DropdownToggle>
         <DropdownMenu right={true}>
           <DropdownItem>
-            <NavLink href="/">Upload file</NavLink>
+            <NavLink href="/" onClick={this.uploadfileRedirect}>Upload file</NavLink>
           </DropdownItem>
           <DropdownItem>
-            <NavLink href="/publickey">Show public key</NavLink>
+            <NavLink href="/publickey" onClick={this.publickeyRedirect} >Show public key</NavLink>
           </DropdownItem>
           <DropdownItem>
-            <NavLink href="/checkserver">Check server</NavLink>
+            <NavLink href="/checkserver" onClick={this.checkserverRedirect}>Check server</NavLink>
+          </DropdownItem>
+          <DropdownItem>
+            <NavLink href="/checkfile"  onClick={this.checkfileRedirect}>Get file info</NavLink>
           </DropdownItem>
           <DropdownItem divider={true} />
           <DropdownItem onClick={this.logout}>
@@ -110,12 +149,6 @@ class App extends React.Component<{}, {
               <Nav className="ml-auto" navbar={true}>
                 <NavItem>
                   <NavLink href="https://github.com/palich12/TimeStampBlockChain">GitHub</NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink href="https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi">Allow-Control-Allow-Origin: *</NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink href="/checkfile">Get file info</NavLink>
                 </NavItem>
                 {options}
               </Nav>

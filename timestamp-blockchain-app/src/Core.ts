@@ -25,34 +25,6 @@ const usersData : UserInfo[] = [
 const PROTOCOL_VERSION = 0
 const SERVICE_ID = 130
 const TX_ID = 0
-// const HOST = "http://167.99.130.47:8064"
-const HOST = ""
-
-// const TableKey = Exonum.newType({
-//   fields: [
-//     { name: 'service_id', type: Exonum.Uint16 },
-//     { name: 'table_index', type: Exonum.Uint16 }
-//   ]
-// })
-// const SystemTime = Exonum.newType({
-//   fields: [
-//     { name: 'secs', type: Exonum.Uint64 },
-//     { name: 'nanos', type: Exonum.Uint32 }
-//   ]
-// })
-// const Timestamp = Exonum.newType({
-//     fields: [
-//       { name: 'content_hash', type: Exonum.Hash },
-//       { name: 'metadata', type: Exonum.String }
-//     ]
-//   })
-// const TimestampEntry = Exonum.newType({
-//   fields: [
-//     { name: 'timestamp', type: Timestamp },
-//     { name: 'tx_hash', type: Exonum.Hash },
-//     { name: 'time', type: SystemTime }
-//   ]
-// })
 
 export class Core {
     public static login( login: string, pass: string ) : UserInfo | null {
@@ -143,8 +115,10 @@ export class Core {
         };
         const formData = new FormData();
         formData.append("file", file);
-        formData.append("tx", JSON.stringify(tx));
-        axios.post( HOST + '/api/services/timestamping/v1/files', 
+
+        const txblob = new Blob([JSON.stringify(tx)], {type : "application/json"});
+        formData.append("tx", txblob);
+        axios.post( '/api/services/timestamping/v1/files', 
                     formData, 
                     { 
                         headers: {
@@ -159,13 +133,13 @@ export class Core {
 
     public static async checkFile(file:File): Promise<string>{
         const hash = await Core.getFileHash(file);
-        return axios.get<string>( HOST + '/api/services/timestamping/v1/timestamps/value/' + hash)
+        return axios.get<string>( '/api/services/timestamping/v1/timestamps/value/' + hash)
         .then( response => response.data );
     }
 
     public static async checkServer() : Promise<string> {
         return (await axios.get<string>( 
-            HOST + '/api/services/configuration/v1/configs/actual'
+            '/api/services/configuration/v1/configs/actual'
         )).data;
     }
 }
