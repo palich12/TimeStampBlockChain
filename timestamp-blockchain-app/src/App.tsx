@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { Link, Route, Switch } from 'react-router-dom';
 import {
   Alert,
   Collapse,
@@ -77,7 +77,7 @@ class App extends React.Component<{}, {
     const checkserver = () => (<CheckServer setAlert={this.setAlert}/>);
     const checkfile = () => (<CheckFile setAlert={this.setAlert}/>); 
     const fileinfo = (props:any) => (<FileInfo setAlert={this.setAlert} hash={props.match.params.hash} />);
-    const blocks = (props:any) => (<Blocks setAlert={this.setAlert} />);
+    const blocks = () => (<Blocks setAlert={this.setAlert} />);
     const mainComponent = userInfo != null ? 
     (
       <Switch>
@@ -100,19 +100,19 @@ class App extends React.Component<{}, {
         </DropdownToggle>
         <DropdownMenu right={true}>
           <DropdownItem>
-            <NavLink href="/">Upload file</NavLink>
+            <Link to="/">Upload file</Link>
           </DropdownItem>
           <DropdownItem>
-            <NavLink href="/checkfile">Get file info</NavLink>
+            <Link to='/checkfile'>Get file info</Link>
           </DropdownItem>
           <DropdownItem>
-            <NavLink href="/blocks">Blocks list</NavLink>
+            <Link to="/blocks">Blocks list</Link>
           </DropdownItem>
           <DropdownItem>
-            <NavLink href="/checkserver">Check server</NavLink>
+            <Link to="/checkserver">Check server</Link>
           </DropdownItem>
           <DropdownItem>
-            <NavLink href="/publickey" >Show public key</NavLink>
+            <Link to="/publickey" >Show public key</Link>
           </DropdownItem>
           <DropdownItem divider={true} />
           <DropdownItem onClick={this.logout}>
@@ -121,7 +121,7 @@ class App extends React.Component<{}, {
         </DropdownMenu>
       </UncontrolledDropdown>):"";
     return (
-      <BrowserRouter>
+      
         <div className="App">
             <Navbar color="light" light={true} expand="md">
             <NavbarBrand href="/">Blockchain file storage</NavbarBrand>
@@ -141,7 +141,6 @@ class App extends React.Component<{}, {
             {mainComponent}
           </div>
         </div>
-      </BrowserRouter>
     );
   }
 }
