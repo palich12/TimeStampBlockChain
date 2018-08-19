@@ -22,6 +22,7 @@ import ShowPublicKey from './ShowPublicKey';
 import UploadFile from './UploadFile';
 
 import * as browserHistory from 'history';
+import Blocks from './Blocks';
 import FileInfo from './FileInfo';
 export const history = browserHistory.createBrowserHistory();
 
@@ -76,6 +77,7 @@ class App extends React.Component<{}, {
     const checkserver = () => (<CheckServer setAlert={this.setAlert}/>);
     const checkfile = () => (<CheckFile setAlert={this.setAlert}/>); 
     const fileinfo = (props:any) => (<FileInfo setAlert={this.setAlert} hash={props.match.params.hash} />);
+    const blocks = (props:any) => (<Blocks setAlert={this.setAlert} />);
     const mainComponent = userInfo != null ? 
     (
       <Switch>
@@ -84,6 +86,7 @@ class App extends React.Component<{}, {
         <Route path='/checkserver' component={checkserver}/>
         <Route path='/checkfile' component={checkfile}/>
         <Route path="/file/:hash" component={fileinfo}/>
+        <Route path="/blocks" component={blocks}/>
       </Switch>
     ):(
       <Switch>
@@ -100,13 +103,16 @@ class App extends React.Component<{}, {
             <NavLink href="/">Upload file</NavLink>
           </DropdownItem>
           <DropdownItem>
-            <NavLink href="/publickey" >Show public key</NavLink>
+            <NavLink href="/checkfile">Get file info</NavLink>
+          </DropdownItem>
+          <DropdownItem>
+            <NavLink href="/blocks">Blocks list</NavLink>
           </DropdownItem>
           <DropdownItem>
             <NavLink href="/checkserver">Check server</NavLink>
           </DropdownItem>
           <DropdownItem>
-            <NavLink href="/checkfile">Get file info</NavLink>
+            <NavLink href="/publickey" >Show public key</NavLink>
           </DropdownItem>
           <DropdownItem divider={true} />
           <DropdownItem onClick={this.logout}>

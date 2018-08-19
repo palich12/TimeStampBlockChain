@@ -2,6 +2,7 @@ import axios from 'axios'
 import * as CryptoJS from 'crypto-js';
 // @ts-ignore
 import * as Exonum from 'exonum-client'
+import { Block } from './Block';
 import {UserInfo} from './UserInfo';
 
 const usersData : UserInfo[] = [
@@ -157,5 +158,12 @@ export class Core {
     public static redirect(path:string){
         history.pushState({},"",path); 
         window.location.reload();
+    }
+
+    public static async getBlocks(): Promise<Block[]>{      
+        const res = (await axios.get<any>( '/api/explorer/v1/blocks?count=10&skip_empty_blocks=true')).data;
+        return new Promise<Block[]>((resolve)=>{
+            resolve(res.blocks);
+        });
     }
 }
